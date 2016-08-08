@@ -230,9 +230,9 @@ FSM.prototype.getMessageForTransition = function (transitionInfo) {
 
     var randMessagesLen = randMessageIds && randMessageIds.length;
     if (randMessagesLen) {
-        var selection = Math.random() * randMessageLen;
+        var selection = Math.floor(Math.random() * randMessagesLen);
         var randMessageId = randMessageIds[selection];
-        message = MESSAGES[randMessageId]; 
+        message = MESSAGES[randMessageId] + ' ';; 
     }
 
     for (var i = 0, len = messageIds.length; i < len; i++) {
@@ -240,7 +240,7 @@ FSM.prototype.getMessageForTransition = function (transitionInfo) {
         var messageText = MESSAGES[messageId];
         message += messageText + ' ';
     }
-    
+
     return message;
 }
 
@@ -256,7 +256,23 @@ FSM.prototype.getHistory = function () {
 }
 
 var f = new FSM('S0', PURE_LEADER_TRANSITION_MAP);
-f.transition('f');
+
+//Trace out path S0-> S1-> S2 ->S7->S8->S3->S4->S2->S3
+f.transition('f'); //S1
 f.getHistory();
-f.transition('d');
+f.transition('d'); //S2
 f.getHistory();
+f.transition('g'); //S7
+f.getHistory();
+f.transition('f'); //S8
+f.getHistory();
+f.transition('g'); //S3
+f.getHistory();
+f.transition('s'); //S4
+f.getHistory();
+f.transition('d'); //S2
+f.getHistory();
+f.transition('s'); //S3
+f.getHistory();
+f.transition('gfdsafdafsad'); //Exception! Invalid event
+f.getHistory(); //S3
