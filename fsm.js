@@ -9,7 +9,7 @@ var EVENTS = {
     'u': 'failed to punish'
 };
 
-//Make into a constant and prevent modifications
+//Make into a constant to prevent modifications
 Object.freeze(EVENTS);
 
 var MESSAGES = [
@@ -38,7 +38,7 @@ var MESSAGES = [
 var CATCH_ALL_EVENT = 'ALL';
 
 //Transition maps
-var STATE_TRANSITION_INFO = {
+var PURE_LEADER_TRANSITION_MAP = {
     'S0': {
         'ALL': {
             messageIds: [15],
@@ -236,7 +236,7 @@ FSM.prototype.getHistory = function () {
     return logs.join('\n');
 }
 
-var f = new FSM('S0', STATE_TRANSITION_INFO);
+var f = new FSM('S0', PURE_LEADER_TRANSITION_MAP);
 f.transition('f');
 f.getHistory();
 f.transition('d');
