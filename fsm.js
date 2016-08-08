@@ -274,5 +274,7 @@ f.transition('d'); //S2
 f.getHistory();
 f.transition('s'); //S3
 f.getHistory();
-f.transition('gfdsafdafsad'); //Exception! Invalid event
-f.getHistory(); //S3
+f.transition('gfdsafdafsad'); //Exception! Invalid event; still at S3
+console.log(f.getHistory()); 
+console.log(f.currentMessage);
+console.log(f.currentState);
