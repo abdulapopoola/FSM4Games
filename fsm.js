@@ -47,11 +47,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S1': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -61,11 +63,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S2': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -75,11 +79,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S3': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -89,11 +95,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S4': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -103,11 +111,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S5': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -117,11 +127,13 @@ var PURE_LEADER_TRANSITION_MAP = {
     },
     'S6': {
         'd': {
-            messageIds: [11, 12],
+            randMessageIds: [11, 12],
+            messageIds: [],
             endState: 'S2'
         },
         'g': {
-            messageIds: [11, 12, 13],
+            randMessageIds: [11, 12],
+            messageIds: [13],
             endState: 'S7'
         },
         's': {
@@ -205,23 +217,30 @@ FSM.prototype.transition = function (event) {
     var newStateTransitionInfo = this.transitionMap[newStateName];
     var newState = new State(newStateName, newStateTransitionInfo);
 
-    this.currentMessage = this.getMessageForTransition(transitionInfo.messageIds)
+    this.currentMessage = this.getMessageForTransition(transitionInfo)
     var transition = new Transition(this.currentState, newState, event, this.currentMessage);
     this.currentState = newState;
     this.history.unshift(transition);
 }
 
-FSM.prototype.getMessageForTransition = function (messageIds) {
-    if (!messageIds.length) {
-        return '';
+FSM.prototype.getMessageForTransition = function (transitionInfo) {
+    var message = '';
+    var messageIds = transitionInfo.messageIds;
+    var randMessageIds = transitionInfo.randMessageIds;
+
+    var randMessagesLen = randMessageIds && randMessageIds.length;
+    if (randMessagesLen) {
+        var selection = Math.random() * randMessageLen;
+        var randMessageId = randMessageIds[selection];
+        message = MESSAGES[randMessageId]; 
     }
 
-    var message = '';
     for (var i = 0, len = messageIds.length; i < len; i++) {
         var messageId = messageIds[i];
         var messageText = MESSAGES[messageId];
         message += messageText + ' ';
     }
+    
     return message;
 }
 
