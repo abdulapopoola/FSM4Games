@@ -160,13 +160,13 @@ function Transition(startState, endState, event, transitionMessage) {
 
 Transition.prototype.getTransitionLog = function () {
     return 'State transition: ' +
-        this.startState + ' -> ' + this.endState +
+        this.startState.name + ' -> ' + this.endState.name +
         ' with transition message: ' + this.message +
-        ' was triggered by event ' + event;
+        ' was triggered by event ' + this.triggerEvent + '\n';
 };
 
 function State(stateName, transitionMap) {
-    this.state = stateName;
+    this.name = stateName;
     this.transitionMap = transitionMap;
 }
 
@@ -202,9 +202,9 @@ FSM.prototype.transition = function (event) {
     var newStateTransitionInfo = STATE_TRANSITION_INFO[newStateName];
     var newState = new State(newStateName, newStateTransitionInfo);
 
-    this.currentState = newState;
     this.currentMessage = this.getMessageForTransition(transitionInfo.messageIds)
     var transition = new Transition(this.currentState, newState, event, this.currentMessage);
+    this.currentState = newState;
     this.history.unshift(transition);
 }
 
@@ -230,8 +230,9 @@ FSM.prototype.getHistory = function () {
         logs.unshift(transition.getTransitionLog());
     }
 
-    return this.logs.join(' ');
+    return logs.join(' ');
 }
 
 var f = new FSM('S0');
 f.transition('f');
+f.getHistory();
