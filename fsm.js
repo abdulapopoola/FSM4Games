@@ -162,7 +162,7 @@ Transition.prototype.getTransitionLog = function () {
     return 'State transition: ' +
         this.startState.name + ' -> ' + this.endState.name +
         ' with transition message: ' + this.message +
-        ' was triggered by event ' + this.triggerEvent + '\n';
+        ' was triggered by event ' + this.triggerEvent;
 };
 
 function State(stateName, transitionMap) {
@@ -179,12 +179,15 @@ State.prototype.getTransitionInfoForEvent = function (event) {
     return stateInfo;
 }
 
-function FSM(startStateName) {
+function FSM(startStateName, transitionMap) {
     if (!startStateName) {
         throw new Error('Must specify a start state!');
     }
 
-    var startStateInfo = STATE_TRANSITION_INFO[startStateName];
+    this.transitionMap = transitionMap;
+    Object.freeze(this.transitionMap);
+
+    var startStateInfo = this.transitionMap[startStateName];
     var startState = new State(startStateName, startStateInfo);
 
     this.history = [];
@@ -199,7 +202,7 @@ FSM.prototype.transition = function (event) {
 
     var transitionInfo = this.currentState.getTransitionInfoForEvent(event);
     var newStateName = transitionInfo.endState;
-    var newStateTransitionInfo = STATE_TRANSITION_INFO[newStateName];
+    var newStateTransitionInfo = this.transitionMap[newStateName];
     var newState = new State(newStateName, newStateTransitionInfo);
 
     this.currentMessage = this.getMessageForTransition(transitionInfo.messageIds)
@@ -230,9 +233,11 @@ FSM.prototype.getHistory = function () {
         logs.unshift(transition.getTransitionLog());
     }
 
-    return logs.join(' ');
+    return logs.join('\n');
 }
 
-var f = new FSM('S0');
+var f = new FSM('S0', STATE_TRANSITION_INFO);
 f.transition('f');
+f.getHistory();
+f.transition('d');
 f.getHistory();
